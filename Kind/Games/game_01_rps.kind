@@ -7,44 +7,100 @@ type Object {
 
 // Converts a text to an Object. If not possible, returns rock
 Object.read(code: String): Object
-  ?a
+  case code {
+    nil: Object.rock
+    cons: switch String.eql(code) {
+            "rock": Object.rock
+            "paper": Object.paper
+            "scissors": Object.scissors
+          } 
+  default Object.rock
+  }
+
+//rockpaperscissor: Object
+//  Object.read("paper")
+
 
 // Converts a number to an Object. If not possible, returns rock
 Object.from_nat(n: Nat): Object
-  ?b
+//  ?b
+  case n {
+    zero: Object.rock
+    succ: switch Nat.eql(n) {
+            1: Object.paper
+            2: Object.scissors
+          }
+  default Object.rock
+  }
+
+// I'm creating a function to print the AI choice
+Object.show(a: Object): String
+
+  case a {
+    rock:"The opponent chose: rock"
+    paper: "The opponent chose: paper"
+    scissors: "The opponent chose: scissors"
+  }
+
 
 // Checks if Object a beats Object b
 // Draw = false
 Object.wins(a: Object, b: Object): Bool
-  ?c
+  case a {
+    rock: case b {
+            rock: false
+            paper: false
+            scissors: true
+          }
+    paper: case b {
+             rock: true
+             paper: false
+             scissors: false
+          }
+    scissors: case b {
+                rock: false
+                paper: true
+                scissors: false
+              }
+  }
+//rockpaperscissor: Bool
+//  Object.wins(Object.scissors, Object.paper)
 
+ 
 // If wins return "You won", else "You lost"
 Object.match_result(win: Bool): String
-  ?d
+//  ?d
+  case win {
+    true: "Vencestes \n" // a \n dentro da string faz dar um espaço na hora do print
+    false: "Perdestes??!? \n"
+  }
 
-Test: IO(Unit)
+rockpaperscissor: IO(Unit)
   IO {
     IO.print("Pick one: rock, paper or scissors")
     // Asks for user input and saves it in variable line
     get user_input = IO.get_line
 
     // Converts the user_input (String) to the Object type
-    let user_object = ?e
+    let user_object = Object.read(user_input)
 
     // Returns a random number below 3
     // 0, 1 or 2
     get random_num = IO.random(3)
 
     // Converts random_num (Nat) to the Object type
-    let cpu_object = ?f
-
+    let cpu_object = Object.from_nat(random_num)
     // Compares user_object and cpu_object and returns true if user wins
-    let user_won = ?g
+    let user_won = Object.wins(user_object, cpu_object)
 
     // Final message to be said: "You won" or "You lost"
-    let final_message = ?h
-
+    let final_message = Object.match_result(user_won)
+    
+    IO.print(Object.show(cpu_object))
     IO.print(final_message)
-
-    Test
+    
+// A linha abaixo faz o jogo executar em loop
+    rockpaperscissor
   }
+//
+
