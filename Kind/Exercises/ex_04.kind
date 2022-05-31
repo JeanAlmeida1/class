@@ -1,42 +1,178 @@
-// Advanced exercises involving recursion
 
-type Nat {
-  zero
-  succ(pred: Nat)
-}
+
+//type Nat {
+//  zero
+//  succ(pred: Nat)
+//}
+
+//função metade
+//metade(a: Nat): Nat 
+//  case a {
+//    zero: Nat.zero
+//    succ: case a.pred {
+//            zero: 0
+//            succ: Nat.succ(metade(a.pred.pred))
+//          }
+//  }
+// Num exemplo onde a = 6, recursão vai gerar: Nat.succ, Nat.succ, Nat.succ, Nat.zero 
+// onde cada Nat.succ é como se fosse +1, aí teremos 3, que é o resultado.
+
+// comentário: para acessar o pred do pred, eu tenho que abrir o pred com case
+// a função metade não te cospe a metade diretamente (ex: metade de 6 = 3), ela vai rodar 3
+// vezes a recursão até chegar no Nat.succ ali que funciona como um +1. Aí no
+// Nat.succ(metade(a.pred.pred)), na hora que chega no "metade" a função volta
+// lá em cima, só que ao invés do 6 do exemplo, já fica com valor 4 (pq eu
+// peguei o pred do pred de 6).  
+
 
 // Doubles a number
-dbl(a: Nat): Nat // double
+//dbl(a: Nat): Nat // double
 
-  ?b
+//  case a {
+//    zero: Nat.zero
+//    succ: Nat.succ(Nat.succ(dbl(Nat.pred(a))))
+//  }
+//ex_03:_
+//  dbl(14)
+
+// na função dbl: por exemplo: a = 6. Não é zero, então vai pro succ. No
+// succ eu tenho dois Nat.succ, então eu vou somar +2 cada vez que o looping
+// passar. Eu somo +2 e meu A vai virar o nat.pred(a), ou seja, vira 5, vira 4,
+// vira 3, vira 2, vira 1, vira 0. Aí soma +2 pra cada virada dessas e você tem
+// o dobro. Eu tenho que usar Nat.pred(a) dentro do dbl porque a minha função stoppa no zero.
+// Se eu coloco succ dentro do dobl igual eu tava tentando fazer antes, a função
+// ia parar no infinito. 
+
+
+
+
+//  ?b
 
 // Addition
 add(a: Nat, b: Nat): Nat
+  case a {
+    zero: b
+    succ: case b {
+            zero: a
+            succ: Nat.succ(Nat.succ(add(Nat.pred(a), Nat.pred(b))))
+          }
+  }
 
-  ?a
+//ex_03:_
+//  add(2,3)
+
+//  ?a
 
 // Multiplication
 mul(a: Nat, b: Nat): Nat
-  
-  ?m
+  case a {
+    zero: 0
+    succ: case b{
+            zero: 0
+            succ: add(b, mul(Nat.pred(a), b))
+          }
+  }
+//ex_03:_
+//  mul(2,9)
+//
+//  ?m
 
 // Subtraction
 // 4 - 5 = 0
 // 5 - 4 = 1
 sub(a: Nat, b: Nat): Nat
-
-  ?s
+  case b {
+    zero: a
+    succ: case a {
+            zero: 0
+            succ: sub(Nat.pred(a),Nat.pred(b)) 
+          }
+  }
+//ex_03:_
+//  sub(9,2)
+//  ?s
 
 // Factorial
 // 4! = 24
 fac(a: Nat): Nat 
-  
-  ?f
+  case a{
+    zero: Nat.succ(Nat.zero)
+    succ: mul(a, fac(Nat.pred(a)))
+  }
+
+//ex_03:_
+//  fac(9)  
+
+
+//  ?f
+
+// Division
+// 1 / 2 = 0
+// x / 0 = 0
+// 5 / 2 = 2
+div(a: Nat, b: Nat): Nat // division
+
+// VERSAO QUE FUNCIONA PARA RESTOS {0,1} sem usar Nat.pred(a), que é uma função
+// nativa do kind:
+
+//case b{
+//    zero: 0
+//    succ: case a {
+//            zero: 0
+//            succ: case a.pred {
+//                    zero: 0
+//                    succ: Nat.succ(div(sub(a,b),b))
+//                  }
+//          }
+//}
+
+// VERSAO QUE FUNCIONA PRA RESTOS {0,1} mais simples, pois podemos usar a função
+// nativa Nat.pred(a) e não precisamos abrir a variável a antes de abrir a
+// a.pred:
+
+
+//  case b{
+//    zero: Nat.zero
+//    succ: case Nat.pred(a) {
+//            zero: 0
+//            succ: Nat.succ(div(sub(a, b), b))
+//          }
+//  }
+
+// Função que funciona na forma geral
+
+  case b{ 
+    zero: 0
+    succ: case sub(a,b) {
+            zero: case Nat.eql(a,b) {
+                    true:Nat.succ(0)
+                    false:0
+                  }
+            succ: Nat.succ(div(sub(a,b),b))
+          }
+  }
+//ex_03:_
+//  div(45,6)
+
+//  ?d
 
 // Equal
 eql(a: Nat, b: Nat): Bool // Given 2 numbers, it returns true if the 2 are the same and false if they are different.
-  
-  ?e 
+  case a{
+    zero: case b{
+            zero: true
+            succ: false
+          }
+    succ: case b{
+            zero: false
+            succ: eql(a.pred, b.pred)
+          }
+        }
+//ex_03:_
+//  eql(0,0)
+
+
+//  ?e 
 
 // Do not use the "not" function to create the functions below
 
@@ -44,59 +180,42 @@ eql(a: Nat, b: Nat): Bool // Given 2 numbers, it returns true if the 2 are the s
 // 2 > 1 = True
 // 3 > 3 = False
 gtn(a: Nat, b: Nat): Bool // if A > B == True else false
-  
-  ?g
+  case a{
+    zero: case b{
+            zero: false
+            succ: false
+          }
+    succ: case b{
+            zero: true
+            succ: gtn(Nat.pred(a), Nat.pred(b))
+          }
+  }
+//ex_03:_
+//  gtn(0,1)
+
+
+
+//  ?g
 
 // Lower than
 // 1 < 2 = True
 // 3 < 3 = False
 ltn(a: Nat, b: Nat): Bool // if A > B == False else true 
-  
-  ?l
-
-// Minimum
-// min(2, 3) = 2
-// min(4, 1) = 1
-min(a: Nat, b: Nat): Nat // if A < B then A else B
-  
-  ?m2
-
-// Maximum
-// max(2, 3) = 3
-// max(4, 1) = 4
-max(a: Nat, b: Nat): Nat // if A > B then A else B
-  
-  ?m3
-
-
-// Divides a number by two
-// 2 / 2 = 1
-// 5 / 2 = 2
-// 1 / 2 = 0
-hlf(a: Nat): Nat
-  ?h
-
-// Division
-// 1 / 2 = 0
-// x / 0 = 0
-// 5 / 2 = 2
-div(a: Nat, b: Nat): Nat // division
-  
-  ?d
-
-
-ex_04: IO<Unit>
-  IO {
-    Tests._04.dbl(dbl)
-    Tests._04.add(add)
-    Tests._04.mul(mul)
-    Tests._04.sub(sub)
-    Tests._04.fac(fac)
-    Tests._04.eql(eql)
-    Tests._04.gtn(gtn)
-    Tests._04.ltn(ltn)
-    Tests._04.min(min)
-    Tests._04.max(max)
-    Tests._04.hlf(hlf)
-    Tests._04.div(div)
+  case a{
+    zero: case b{
+            zero: false
+            succ: true
+          }
+    succ: case b{
+            zero: false
+            succ: ltn(Nat.pred(a), Nat.pred(b))
+          }
   }
+//ex_03:_
+//  ltn(1,2)
+
+
+
+
+//  ?l
+

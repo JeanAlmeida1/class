@@ -1,72 +1,87 @@
 // Basic Exercises involving Bools
 
-type Bool {
-  true
-  false
-}
-
-// Is true
-// Returns true if input is true
-is_true(a: Bool): Bool
-  ?a 
-
-
-// Is false
-// Returns true if input is false
-is_false(a: Bool): Bool
-  ?b
+// type Bool {
+//  true
+//  false
+//}
 
 // Negation
 // Returns the opposite of a Bool
-neg(b: Bool): Bool 
-  ?c
+//neg(b: Bool): Bool 
+//  case b {
+//    true:false
+//    false:true
+//}
+//test:_
+//  neg(true)
+
+//  ?n
 
 // And
 // Returns true if both inputs are true
-and(a: Bool, b: Bool): Bool
-  ?d
+//and(a: Bool, b: Bool): Bool
+//  case a {
+//    true: case b {
+//            true:true
+//            false:false
+//          }
+//    false: false
+//  }
+
+//test:_
+//  and(true, false)
+
+//    false: case b {
+//             true: false
+//             false: false
+//          }
+// se já vai retornar false nos 2 casos acima, posso já escrever direto, ainda
+// que funcione da mesma forma
+// false:false
+
+
+//  ?a
 
 // Or
 // Returs true if any input is true
-or(a: Bool, b: Bool): Bool
-  ?e
+
+//r(a: Bool, b: Bool): Bool
+//  case a {
+//    true: case b{
+//            true:true
+//            false:true
+//          }   eu posso fazer assim, mas ambos vão retornar true, então não
+//          preciso abrir o case b
+
+//  case a{
+//    true: true
+//    false: case b{
+//             true:true
+//             false:false
+//          }
+//  }
+  
+//test:_
+//  r(false, false) 
 
 // Equal
 // Returs true if both inputs are identical
 eql(a: Bool, b: Bool): Bool
-  ?f
+//  ?e
 
-// Xor
-// Returns true if both inputs are different
-xor(a: Bool, b: Bool): Bool
-  ?g
-
-// Nor
-// Returns true if both inputs are false
-nor(a: Bool, b: Bool): Bool
-  ?h
-
-// Nand
-// Returns false only if both inputs are true
-nand(a: Bool, b: Bool): Bool
-  ?i
-
-// Xnor
-// Returns true if both inputs are identical
-xnor(a: Bool, b: Bool): Bool
-  ?j
-
-
-ex_00: IO<Unit>
-  IO {
-    Tests._00.is_true(is_true)
-    Tests._00.is_false(is_false)
-    Tests._00.neg(neg)
-    Tests._00.and(and)
-    Tests._00.or(or)
-    Tests._00.eql(eql)
-    Tests._00.xor(xor)
-    Tests._00.nor(nor)
-    Tests._00.nand(nand)
-    Tests._00.xnor(xnor)
+  case a {
+    true: case b {
+            true:true
+            false:false
+          }
+    false: case b {
+             true:false
+             false:true
+           }
   }
+
+test:_
+  eql(false,false)
+  
+// favela venceu
+
