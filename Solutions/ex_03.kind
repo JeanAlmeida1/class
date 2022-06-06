@@ -1,0 +1,62 @@
+// Basic Exercises involving Nats
+
+type Nat {
+  zero
+  succ(pred: Nat)
+}
+
+// Nat.succ(Nat.zero) -> retorna o sucessor (no caso 1), como se fosse o S(z) da HVM
+//escrevendo o número 2:
+//Nat.succ(Nat.succ(Nat.zero))
+//escrevendo o predecessor de 2 
+
+//(Nat.succ(Nat.succ(x.pred))) -> no lugar de x.pred, é sintaticamente certo
+//escrever Nat.zero(pred), só que eu não posso ter um número natural predecessor
+//de zero né, então se escreve x.pred 
+
+// Increment
+// 2 + 1 = 3
+// 0 + 1 = 1
+inc(a: Nat): Nat  
+  case a {
+    zero:Nat.succ(Nat.zero)             // eu posso escrever 0 ao invés de Nat.zero
+    succ:Nat.succ(a)
+  }
+ex_01:_
+  inc(4)
+
+//  ?i
+
+// Decrement
+// 2 - 1 = 1
+// 0 - 1 = 0
+dec(a: Nat): Nat
+  case a {
+    zero:Nat.zero                   // ou zero:0
+    succ:Nat.pred(a)               // é succ de construtor pq os construtores dos naturais são zero e succ
+                                   // ao invés de Nat.pred(a) eu poderia colocar
+                                   // só a.pred
+//    }
+
+ex_01:_
+  dec(4)
+
+
+
+//  ?d
+
+is_zero(a: Nat): Bool
+//  ?a
+
+  case a {
+    zero:true
+    succ:false
+    }
+
+ex_01:_
+  is_zero(0)
+
+
+  
+
+
